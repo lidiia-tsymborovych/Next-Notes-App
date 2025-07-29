@@ -1,6 +1,6 @@
-import { CategoryItem } from "@/app/types/category";
+import { CategoryWithoutId } from '@/app/types/category';
 
-export const defaultCategories: Omit<CategoryItem, 'id'>[] = [
+export const defaultCategories: CategoryWithoutId[] = [
   {
     title: 'work',
     bgColor: '#E0E7FF', // light indigo

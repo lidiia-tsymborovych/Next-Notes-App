@@ -24,6 +24,7 @@ import { Input } from '@/components/ui/input';
 import { zodResolver } from '@hookform/resolvers/zod';
 import z from 'zod';
 import { cn } from '@/lib/utils';
+import { getMe } from '@/lib/api';
 
 const loginSchema = z.object({
   email: z.email('Invalid email address'),
@@ -57,24 +58,9 @@ export default function Home() {
   });
 
 useEffect(() => {
-  async function checkAuth() {
-    try {
-      const res = await fetch('/api/auth/me', {
-        method: 'GET',
-        credentials: 'include', // важливо, щоб куки пішли на сервер
-      });
-
-      if (res.ok) {
-        setIsLoggedIn(true);
-      } else {
-        setIsLoggedIn(false);
-      }
-    } catch {
-      setIsLoggedIn(false);
-    }
-  }
-
-  checkAuth();
+  getMe()
+    .then(() => setIsLoggedIn(true))
+    .catch(() => setIsLoggedIn(false));
 }, []);
 
 
@@ -108,7 +94,7 @@ const onSubmit = async (data: AuthFormInputs) => {
         email: data.email,
         password: data.password,
       }),
-      credentials: 'include', // важливо!
+      credentials: 'include', 
     });
 
     if (!loginRes.ok) {
@@ -117,7 +103,6 @@ const onSubmit = async (data: AuthFormInputs) => {
       return;
     }
 
-    // НЕ шукаємо token у відповіді, бо він у куках
     setIsLoggedIn(true);
     form.reset();
     router.push('/categories');
@@ -142,7 +127,7 @@ const handleLogout = async () => {
         {isLoggedIn && (
           <Button
             onClick={handleLogout}
-            className='text-sm text-violet-500 self-end cursor-pointer hover:text-violet-600 shadow-none sm:hover:shadow-md'
+            className='text-sm text-violet-400 self-end cursor-pointer hover:text-violet-600 shadow-none sm:hover:shadow-md mb-8 sm:mb-2'
           >
             Log out
           </Button>

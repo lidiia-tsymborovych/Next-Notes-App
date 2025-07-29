@@ -10,7 +10,7 @@ export default function NavigationActions() {
     'flex items-center gap-1 p-2 text-sm text-[#8c92c1] hover:text-[#6a61d2] transition-colors';
 
   return (
-    <div className='top-4 left-4 sm:top-8 sm:left-8 z-50 flex gap-1'>
+    <div className='top-4 left-4 sm:top-8 sm:left-8 z-50 flex gap-1 mb-2 sm:mb-0'>
       <button
         onClick={() => router.back()}
         className={btnClass}

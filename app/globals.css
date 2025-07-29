@@ -41,10 +41,6 @@
   --input-placeholder: #9c9fbc;
   --input-border: #c3d4e8;
   --input-ring: #aac4e8;
-  /* 
-  --background: oklch(1 0 0);
-
-  --foreground: oklch(0.141 0.005 285.823); */
 
   --card: oklch(1 0 0);
 
@@ -103,11 +99,17 @@
   --sidebar-border: oklch(0.92 0.004 286.32);
 
   --sidebar-ring: oklch(0.705 0.015 286.067);
-    scrollbar-gutter: stable;
 }
 
-html {
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
   scrollbar-gutter: stable;
+}
+*, *:before, *:after {
+  box-sizing: inherit;
 }
 /* @theme inline {
   --color-background: var(--background);

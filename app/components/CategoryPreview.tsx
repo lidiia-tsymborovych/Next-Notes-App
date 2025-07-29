@@ -1,8 +1,8 @@
 // components/CategoryItemCard.tsx
-import { categoryIconMap, CategoryItem } from '@/app/types/category';
+import { categoryIconMap, CategoryWithoutId} from '@/app/types/category';
 
 type Props = {
-  category: Omit<CategoryItem, 'id'>;
+  category: CategoryWithoutId
   isSelected?: boolean;
   onClick?: () => void;
   isInteractive?: boolean; // якщо true — додаємо cursor, hover і т.д.

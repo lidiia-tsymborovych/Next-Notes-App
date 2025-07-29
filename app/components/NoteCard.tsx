@@ -2,72 +2,115 @@
 
 import { useState } from 'react';
 import { Note } from '../types/note';
-import { ChevronDown, ChevronUp, Pencil, Trash2 } from 'lucide-react';
+import { ChevronDown, ChevronUp, Pencil, Trash2, Save } from 'lucide-react';
+import { Input } from '@/components/ui/input';
+import { Textarea } from '@/components/ui/textarea';
+import { Button } from '@/components/ui/button';
 
 type Props = {
   note: Note;
-  categoryId?: string;
   onEdit?: (note: Note) => void;
-  onDelete?: (id: string) => void;
+  onDelete?: (id: number) => void;
 };
 
-export default function NoteCard({
-  note,
-  categoryId,
-  onEdit,
-  onDelete,
-}: Props) {
+export default function NoteCard({ note, onEdit, onDelete }: Props) {
   const [expanded, setExpanded] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+  const [editedNote, setEditedNote] = useState({
+    title: note.title,
+    content: note.content,
+  });
 
-  const toggleExpand = () => setExpanded(prev => !prev);
+  const toggleExpand = () => {
+    if (!isEditing) setExpanded(prev => !prev);
+  };
+
+  const handleSave = () => {
+    onEdit?.({
+      ...note,
+      title: editedNote.title,
+      content: editedNote.content,
+    });
+    setIsEditing(false);
+  };
 
   return (
-    <article
-      className='border border-zinc-200 rounded-lg p-4 shadow-sm flex flex-col gap-2 transition-colors w-full'
-      style={{
-        backgroundColor: categoryId
-          ? `var(--color-${categoryId}bg)`
-          : 'var(--background)',
-      }}
-    >
-      <div className='flex items-start gap-8 sm:gap-16 h-22'>
+    <article className='rounded-2xl p-5 w-full flex flex-col gap-4 bg-gray-50 border border-gray-200 shadow-md transition-shadow hover:shadow-lg'>
+      <div className='flex justify-between items-start gap-4 w-full'>
         <div onClick={toggleExpand} className='cursor-pointer flex-1'>
-          <h2 className='font-semibold text-lg flex items-center gap-1'>
-            {note.title}
-            {expanded ? <ChevronUp size={18} /> : <ChevronDown size={18} />}
-          </h2>
-          <p className='text-sm text-muted-foreground'>{note.date}</p>
-          {!expanded && (
-            <p className='text-sm text-gray-600 line-clamp-2 min-h-[2.5rem] mt-1'>
-              {note.content}
-            </p>
+          {isEditing ? (
+            <>
+              <Input
+                value={editedNote.title}
+                onChange={e =>
+                  setEditedNote({ ...editedNote, title: e.target.value })
+                }
+                className='text-xl font-semibold'
+              />
+              <Textarea
+                value={editedNote.content}
+                onChange={e =>
+                  setEditedNote({ ...editedNote, content: e.target.value })
+                }
+                rows={4}
+                className='mt-2'
+              />
+            </>
+          ) : (
+            <>
+              <h2 className='font-semibold text-xl flex items-center gap-2 text-[var(--foreground)]'>
+                {note.title}
+                {expanded ? (
+                  <ChevronUp size={18} className='text-gray-400' />
+                ) : (
+                  <ChevronDown size={18} className='text-gray-400' />
+                )}
+              </h2>
+              {!expanded && (
+                <p className='text-sm text-gray-600 line-clamp-2 mt-2'>
+                  {note.content}
+                </p>
+              )}
+            </>
           )}
         </div>
 
-        {/* RIGHT: Buttons */}
-        <div className='flex flex-col sm:flex-row justify-around shrink-0 self-stretch sm:self-auto gap-2'>
-          <button
-            onClick={() => onEdit?.(note)}
-            className='flex items-center justify-center sm:w-22 text-sm p-2 rounded-md border border-[var(--color-workicon)] text-[var(--color-workicon)] hover:bg-[var(--color-workicon)]/20 transition'
-          >
-            <span className='hidden sm:inline mr-2'>Edit</span>
-            <Pencil size={16} />
-          </button>
-          <button
-            onClick={() => onDelete?.(note.id)}
-            className='flex items-center justify-center sm:w-22 text-sm p-2 rounded-md border border-[var(--color-hobbyicon)] text-[var(--color-hobbyicon)] hover:bg-[var(--color-hobbyicon)]/20 transition cursor-pointer'
-            aria-label='Delete note'
-          >
-            <span className='hidden sm:inline mr-2'>Delete</span>
+        <div className='flex flex-col sm:flex-row gap-2 shrink-0'>
+          {isEditing ? (
+            <Button
+              size='sm'
+              onClick={handleSave}
+              className='bg-green-100 hover:bg-green-200 text-green-800'
+            >
+              <Save size={16} />
+              <span className='hidden sm:inline'>Save</span>
+            </Button>
+          ) : (
+            <Button
+              size='sm'
+              variant='outline'
+              className='border-none text-[var(--foreground)] bg-indigo-100 hover:bg-indigo-200'
+              onClick={() => setIsEditing(true)}
+            >
+              <Pencil size={16} />
+              <span className='hidden sm:inline'>Edit</span>
+            </Button>
+          )}
 
+          <Button
+            size='sm'
+            variant='outline'
+            className='border-none text-[var(--foreground)] bg-fuchsia-100 hover:bg-fuchsia-200'
+            onClick={() => onDelete?.(note.id)}
+          >
             <Trash2 size={16} />
-          </button>
+            <span className='hidden sm:inline'>Delete</span>
+          </Button>
         </div>
       </div>
 
-      {/* FULL CONTENT */}
-      {expanded && (
-        <div className='text-sm text-gray-700 whitespace-pre-wrap'>
+      {!isEditing && expanded && (
+        <div className='text-sm text-[var(--foreground)] whitespace-pre-wrap border-t pt-3 mt-2 border-gray-300'>
           {note.content}
         </div>
       )}

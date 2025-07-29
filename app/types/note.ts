@@ -1,7 +1,11 @@
 export type Note = {
-  id: string;
+  id: number;
   title: string;
-  date: string;
   content: string;
+  createdAt: Date;
+  updatedAt: Date;
+  categoryId: number;
+  userId: number;
 };
 
+export type NoteWithoutId = Omit<Note, 'id' | 'createdAt' | 'updatedAt'>;

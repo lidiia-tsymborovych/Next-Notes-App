@@ -20,10 +20,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { categoryIconMap, CategoryItem } from '../types/category';
+import { categoryIconMap, CategoryWithoutId } from '../types/category';
 import { X } from 'lucide-react';
 import CategoryPreview from './CategoryPreview';
 import { useRouter } from 'next/navigation';
+import { createCategory } from '@/lib/api';
 
 const iconNames = Object.keys(
   categoryIconMap
@@ -56,41 +57,33 @@ export function CategoryForm({ onClose }: Props) {
     },
   });
 
-const onSubmit = async (values: CategoryFormValues) => {
-  const newCategory: Omit<CategoryItem, 'id'> = {
-    title: values.title,
-    iconName: values.icon,
-    iconColor: values.iconColor,
-    bgColor: values.backgroundColor,
-    notes: [],
+  const onSubmit = async (values: CategoryFormValues) => {
+    const newCategory: CategoryWithoutId = {
+      title: values.title,
+      iconName: values.icon,
+      iconColor: values.iconColor,
+      bgColor: values.backgroundColor,
+      notes: [],
+    };
+
+    try {
+      await createCategory(newCategory);
+      router.push('/categories');
+    } catch (e) {
+      alert((e as Error).message);
+    }
   };
 
-  try {
-    const res = await fetch('/api/categories', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      credentials: 'include',
-      body: JSON.stringify(newCategory),
-    });
-
-    if (!res.ok) throw new Error('Failed to create category');
-
-    router.push('/categories');
-  } catch (e) {
-    alert((e as Error).message);
-  }
-};
 
   const watchValues = form.watch();
 
-  const previewCategory: Omit<CategoryItem, 'id'> = {
+  const previewCategory: CategoryWithoutId = {
     title: watchValues.title || 'Untitled',
     iconName: watchValues.icon || 'work',
     iconColor: watchValues.iconColor || '#000000',
     bgColor: watchValues.backgroundColor || '#ffffff',
     notes: [],
   };
-
 
   return (
     <div className='max-w-5xl relative'>

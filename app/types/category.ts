@@ -160,3 +160,5 @@ export interface CategoryItem {
   notes: Note[];
 }
 
+export type CategoryWithoutId = Omit<CategoryItem, 'id'>;
+

@@ -1,12 +1,61 @@
 import { prisma } from '@/lib/prisma';
 import { NextResponse } from 'next/server';
+import jwt from 'jsonwebtoken';
+
+const JWT_SECRET = process.env.JWT_SECRET || 'some-super-secret-key';
+
+async function getUserIdFromRequest(req: Request): Promise<number | null> {
+  try {
+    const cookie = req.headers.get('cookie') || '';
+    const tokenCookie = cookie
+      .split(';')
+      .find(c => c.trim().startsWith('token='));
+    if (!tokenCookie) return null;
+
+    const token = tokenCookie.split('=')[1];
+    const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
+
+    return decoded.userId;
+  } catch {
+    return null;
+  }
+}
 
 export async function GET() {
   try {
-    const posts = await prisma.note.findMany();
-    return NextResponse.json(posts);
+    const notes = await prisma.note.findMany();
+    return NextResponse.json(notes);
   } catch (error) {
     console.error(error);
-    return NextResponse.json({ error: 'Error' }, { status: 500 });
+    return NextResponse.json({ error: 'Error loading notes' }, { status: 500 });
+  }
+}
+
+export async function POST(req: Request) {
+  try {
+    const userId = await getUserIdFromRequest(req);
+    if (!userId) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { title, content, categoryId } = await req.json();
+
+    if (!title || !content || !categoryId) {
+      return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+    }
+
+    const newNote = await prisma.note.create({
+      data: {
+        title,
+        content,
+        categoryId,
+        userId,
+      },
+    });
+
+    return NextResponse.json(newNote);
+  } catch (error) {
+    console.error('[POST /notes]', error);
+    return NextResponse.json({ error: 'Error creating note' }, { status: 500 });
   }
 }

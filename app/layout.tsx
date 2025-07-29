@@ -13,10 +13,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang='en'>
-      <body>
-        <div className='p-4 sm:p-8 xl:p-16 min-h-screen'>
-          {children}
-        </div>
+      <body className='min-h-screen'>
+        <div className='p-4 sm:p-8 xl:p-16 '>{children}</div>
       </body>
     </html>
   );
