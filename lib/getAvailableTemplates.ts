@@ -1,4 +1,4 @@
-import { CategoryItem } from '@/app/types/category';
+import { CategoryItem, CategoryWithoutId } from '@/app/types/category';
 import { defaultCategories } from './DefaultCategories';
 
 export function getAvailableTemplates(

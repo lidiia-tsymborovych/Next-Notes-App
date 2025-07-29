@@ -32,7 +32,7 @@ export default function SelectTemplatePage() {
   const isAnySelected = selectedCategories.length > 0;
 
   // Тогл категорії у швидкому режимі
-  const toggleCategory = (cat: CategoryItem) => {
+  const toggleCategory = (cat: CategoryWithoutId) => {
     const exists = selectedCategories.find(c => c.title === cat.title);
     if (exists) {
       setSelectedCategories(prev => prev.filter(c => c.title !== cat.title));

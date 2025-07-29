@@ -32,18 +32,19 @@ export async function GET() {
 }
 
 export async function POST(req: Request) {
+  const userId = await getUserIdFromRequest(req);
+  if (!userId) {
+    return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+  }
+
+  const body = await req.json();
+  const { title, content, categoryId } = body;
+
+  if (!title || !content || !categoryId) {
+    return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
+  }
+
   try {
-    const userId = await getUserIdFromRequest(req);
-    if (!userId) {
-      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
-    }
-
-    const { title, content, categoryId } = await req.json();
-
-    if (!title || !content || !categoryId) {
-      return NextResponse.json({ error: 'Missing fields' }, { status: 400 });
-    }
-
     const newNote = await prisma.note.create({
       data: {
         title,
@@ -52,10 +53,13 @@ export async function POST(req: Request) {
         userId,
       },
     });
-
-    return NextResponse.json(newNote);
+    return NextResponse.json(newNote, { status: 201 });
   } catch (error) {
-    console.error('[POST /notes]', error);
-    return NextResponse.json({ error: 'Error creating note' }, { status: 500 });
+    console.error(error);
+    return NextResponse.json(
+      { error: 'Failed to create note' },
+      { status: 500 }
+    );
   }
 }
+
