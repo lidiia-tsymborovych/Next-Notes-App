@@ -5,19 +5,18 @@ import CategoryCard from './CategoryCard';
 import { CategoryItem } from '../types/category';
 import { deleteCategory, getAllCategories } from '@/lib/api';
 import { useEffect, useState } from 'react';
-
+import { Button } from '@/components/ui/button';
+import AddCategoryCard from './AddCategoryCard';
 
 export default function CategoriesList() {
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const router = useRouter();
-  const useCompactLayout = categories.length <= 2;
 
   useEffect(() => {
     getAllCategories()
       .then(setCategories)
       .catch(err => console.error('Failed to fetch categories', err));
   }, []);
-
 
   const handleDelete = async (id: number) => {
     try {
@@ -39,18 +38,9 @@ export default function CategoriesList() {
   );
 
   return (
-    <section>
-      {useCompactLayout ? (
-        <div className='flex justify-center'>
-          <div className='max-w-sm w-full flex flex-col gap-4'>
-            {categories.map(renderCard)}
-          </div>
-        </div>
-      ) : (
-        <div className='grid gap-4 sm:grid-cols-2 md:grid-cols-3 auto-rows-fr'>
-          {categories.map(renderCard)}
-        </div>
-      )}
-    </section>
+    <div className='grid gap-4 sm:grid-cols-2 lg:grid-cols-3 auto-rows-fr w-full'>
+      {categories.map(renderCard)}
+      <AddCategoryCard />
+    </div>
   );
 }

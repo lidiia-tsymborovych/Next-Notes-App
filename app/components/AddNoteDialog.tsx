@@ -12,6 +12,7 @@ import { Button } from '@/components/ui/button';
 import AddNoteForm from './AddNoteForm';
 import { Note } from '../types/note';
 import { cn } from '@/lib/utils';
+import { DialogDescription } from '@radix-ui/react-dialog';
 
 type Props = {
   categoryId: number;
@@ -33,13 +34,16 @@ export default function AddNoteDialog({ categoryId, onNoteCreated, isNotesEmpty 
         <Button
           className={cn(
             'h-10 self-start px-6 mb-8 bg-indigo-300 hover:bg-indigo-400 text-white transition',
-            {'self-center w-60': isNotesEmpty}
+            { 'self-center w-60': isNotesEmpty }
           )}
         >
           + Add New Note
         </Button>
       </DialogTrigger>
       <DialogContent className='bg-white border border-indigo-300'>
+        <DialogDescription>
+          This dialog allows you to create a note.
+        </DialogDescription>
         <DialogHeader>
           <DialogTitle>New Note</DialogTitle>
         </DialogHeader>

@@ -8,7 +8,6 @@ import NavigationActions from '@/app/components/NavigationActions';
 import CategoryItemCard from '@/app/components/CategoryPreview';
 import { CategoryForm } from '@/app/components/CaregoryForm';
 
-
 export default function SelectTemplatePage() {
   const [selectedCategories, setSelectedCategories] = useState<
     CategoryWithoutId[]
@@ -67,50 +66,51 @@ export default function SelectTemplatePage() {
   };
 
   return (
-    <main className='flex flex-col items-stretch gap-10 sm:gap-16 lg:px-16'>
-      <div className='flex flex-col'>
-        <NavigationActions />
-        <h1 className='text-[24px] sm:text-[32px] md:text-[48px] lg:text-[56px] text-center text-[var(--foreground)] font-bold'>
-          Categories Template
-        </h1>
+    <main className='min-h-screen px-4 sm:px-8 flex flex-col gap-8 md:gap-10 lg:gap-12'>
+      <NavigationActions />
+      <h1 className='text-[32px] sm:text-[32px] md:text-[48px] lg:text-[56px] text-center text-[var(--foreground)] font-bold mt-16'>
+        Category Templates
+      </h1>
+      <div className='max-w-6xl mx-auto w-full'>
+        {!showCustomForm && (
+          <div className='grid grid-cols-2 sm:grid-cols-3 gap-4 mb-10 w-full'>
+            {suggested.map(cat => (
+              <CategoryItemCard
+                key={cat.title}
+                category={cat}
+                isSelected={selectedCategories.some(c => c.title === cat.title)}
+                onClick={() => toggleCategory(cat)}
+                isInteractive
+              />
+            ))}
+
+            {!showCustomForm && !selectedCategories.length && (
+              <button
+                onClick={() => setShowCustomForm(true)}
+                className='flex flex-col items-center justify-center min-h-28  rounded-lg cursor-pointer border-3 border-dashed border-gray-300 text-gray-300 hover:border-indigo-300 hover:text-indigo-400'
+                type='button'
+              >
+                + Create Custom Category
+              </button>
+            )}
+          </div>
+        )}
+
+        {showCustomForm && (
+          <CategoryForm onClose={() => setShowCustomForm(false)} />
+        )}
+
+        {isAnySelected && (
+          <div>
+            <Button
+              onClick={handleAddCategories}
+              className='w-full h-12 self-center bg-indigo-300 hover:bg-indigo-400 text-white transition'
+            >
+              Add categories
+            </Button>
+          </div>
+        )}
       </div>
-
-      {!showCustomForm && (
-        <div className='grid grid-cols-2 sm:grid-cols-3 gap-4'>
-          {suggested.map(cat => (
-            <CategoryItemCard
-              key={cat.title}
-              category={cat}
-              isSelected={selectedCategories.some(c => c.title === cat.title)}
-              onClick={() => toggleCategory(cat)}
-              isInteractive
-            />
-          ))}
-        </div>
-      )}
-
-      {showCustomForm ? (
-        <CategoryForm onClose={() => setShowCustomForm(false)} />
-      ) : (
-        <button
-          onClick={() => setShowCustomForm(true)}
-          className='flex flex-col items-center sm:self-start justify-center min-w-60 gap-2 p-4 rounded-lg cursor-pointer border-4 border-dashed border-gray-400 text-gray-600 hover:border-indigo-300 hover:text-indigo-400'
-          type='button'
-        >
-          + Create Custom Category
-        </button>
-      )}
-
-      {isAnySelected && (
-        <div>
-          <Button
-            onClick={handleAddCategories}
-            className='w-full h-10 self-center bg-indigo-300 hover:bg-indigo-400 text-white transition'
-          >
-            Add categories
-          </Button>
-        </div>
-      )}
     </main>
   );
 }

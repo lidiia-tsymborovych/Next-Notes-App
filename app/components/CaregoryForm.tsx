@@ -86,12 +86,8 @@ export function CategoryForm({ onClose }: Props) {
   };
 
   return (
-    <div className='max-w-5xl relative'>
-      <Button onClick={onClose}>
-        <X size={16} />
-      </Button>
-
-      <div className='flex flex-col sm:flex-row justify-center gap-8 sm:gap-16'>
+    <div className='max-w-5xl mx-auto relative'>
+      <div className='flex flex-col sm:flex-row justify-center gap-8 md:gap-16'>
         <Form {...form}>
           <form
             onSubmit={form.handleSubmit(onSubmit)}
@@ -178,7 +174,7 @@ export function CategoryForm({ onClose }: Props) {
 
             <Button
               type='submit'
-              className='w-full h-10 self-center bg-indigo-300 hover:bg-indigo-400 text-white transition'
+              className='w-full h-12 self-center bg-indigo-300 hover:bg-indigo-400 text-white transition'
               disabled={!form.formState.isValid}
             >
               Create category
@@ -186,8 +182,17 @@ export function CategoryForm({ onClose }: Props) {
           </form>
         </Form>
 
-        <div className='pt-4 flex-1'>
-          <p className='text-sm text-muted-foreground mb-2'>Preview:</p>
+        <div className='flex-1'>
+          <p className='text-sm text-[var(--foreground)] font-medium -mt-1 mb-1'>
+            Preview:
+          </p>
+          <Button
+            onClick={onClose}
+            className='absolute -top-3 right-0 shadow-none cursor-pointer text-violet-400 hover:text-violet-600 p-0 !pr-0'
+          >
+            CANCEL
+            <X size={24} />
+          </Button>
           <CategoryPreview category={previewCategory} />
         </div>
       </div>

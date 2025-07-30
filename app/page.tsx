@@ -122,29 +122,36 @@ const handleLogout = async () => {
 };
 
   return (
-    <main className='flex flex-col text-center'>
+    <div className='flex flex-col justify-center items-center min-h-screen text-center'>
       <div className='flex flex-col'>
         {isLoggedIn && (
           <Button
             onClick={handleLogout}
-            className='text-sm text-violet-400 self-end cursor-pointer hover:text-violet-600 shadow-none sm:hover:shadow-md mb-8 sm:mb-2'
+            className='absolute top-0 right-0 text-sm text-violet-400 self-end cursor-pointer hover:text-violet-600 shadow-none'
           >
             Log out
           </Button>
         )}
 
-        <h1 className={cn('text-[26px] sm:text-[48px] font-bold mb-4 sm:mb-8',{'mt-9': !isLoggedIn})}>
+        <h1
+          className={cn(
+            'text-[48px] sm:text-[48px] lg:text-[56px] font-bold mb-6 sm:mb-8 tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-[#700aff] via-pink-500 to-purple-700 animate-text',
+            { 'mt-9': !isLoggedIn }
+          )}
+        >
           Welcome to Notes App
         </h1>
 
-        <p className='text-[16px] sm:text-[24px]'>Your thoughts. Organized.</p>
+        <p className='text-[18px] sm:text-[20px] lg:text-[24px] text-[var(--foreground)]'>
+          Your thoughts. Organized.
+        </p>
 
         <Image
           src='/notes-diary.png'
           alt='Notes illustration'
           width={400}
           height={400}
-          className='self-center mb-16'
+          className='self-center mb-8'
         />
       </div>
 
@@ -280,6 +287,6 @@ const handleLogout = async () => {
           </DialogContent>
         </Dialog>
       )}
-    </main>
+    </div>
   );
 }

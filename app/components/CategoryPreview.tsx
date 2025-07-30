@@ -17,13 +17,13 @@ export default function CategoryItemCard({
   const Icon = categoryIconMap[category.iconName];
 
   const baseClasses =
-    'flex flex-col items-center justify-center gap-2 p-4 rounded-lg border-2 transition-colors';
+    'flex flex-col items-center justify-center min-h-28 gap-2 p-4 rounded-lg border-3 transition-colors';
 
   const borderClasses = isInteractive
     ? isSelected
       ? 'border-indigo-400'
-      : 'border-gray-300 hover:border-indigo-300 cursor-pointer'
-    : 'border-gray-300';
+      : 'border-[var(--input-border)] hover:border-indigo-300 cursor-pointer'
+    : 'border-[var(--input-border)]';
 
   const Wrapper = isInteractive ? 'button' : 'div';
 

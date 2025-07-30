@@ -24,7 +24,7 @@ export default function CategoryCard({ category, onClick, onDelete }: Props) {
   return (
     <article
       onClick={onClick}
-      className='cursor-pointer rounded-2xl border border-[var(--card-border)] p-6 shadow-sm transition-all duration-200 hover:shadow-lg hover:scale-[1.01] flex flex-col justify-between gap-2 min-h-[140px] w-full'
+      className='min-w-70 cursor-pointer rounded-2xl border border-[var(--card-border)] p-6 shadow-sm transition-all duration-200 hover:shadow-lg hover:scale-[1.01] flex flex-col justify-between gap-2 min-h-[140px] w-full'
       style={{ backgroundColor: category.bgColor }}
     >
       <div className='flex items-start justify-between gap-4'>
@@ -61,7 +61,7 @@ export default function CategoryCard({ category, onClick, onDelete }: Props) {
           <DialogHeader>
             <DialogTitle>Are you sure?</DialogTitle>
             <DialogDescription>
-              This will permanently delete the category{' '}
+              This will permanently delete the category
               <strong>{category.title}</strong> and all its notes.
             </DialogDescription>
           </DialogHeader>

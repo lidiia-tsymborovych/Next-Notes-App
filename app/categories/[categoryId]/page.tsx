@@ -75,15 +75,15 @@ const handleNoteEdit = async (updatedNote: Note) => {
   const isNotesEmpty = notes.length === 0; 
 
   return (
-    <main className='flex flex-col gap-6 sm:gap-8'>
+    <main className='flex flex-col max-w-6xl mx-auto gap-6 sm:gap-8 px-4 sm:px-8'>
       <div className='flex flex-col'>
         <NavigationActions />
-        <h1 className='text-[24px] sm:text-[32px] md:text-[48px] lg:text-[56px] text-center text-[var(--foreground)] font-bold'>
-          {title} notes
+        <h1 className='text-[32px] md:text-[48px] lg:text-[56px] text-center text-[var(--foreground)] font-bold mt-16'>
+          {title} Notes
         </h1>
       </div>
 
-      <div className='max-w-5xl mx-auto w-full flex flex-col'>
+      <div className='w-full flex flex-col'>
         <AddNoteDialog
           categoryId={category.id}
           onNoteCreated={handleNoteCreated}
