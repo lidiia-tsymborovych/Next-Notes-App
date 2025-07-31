@@ -1,14 +1,13 @@
-// components/CategoryItemCard.tsx
 import { categoryIconMap, CategoryWithoutId} from '@/app/types/category';
 
 type Props = {
   category: CategoryWithoutId
   isSelected?: boolean;
   onClick?: () => void;
-  isInteractive?: boolean; // якщо true — додаємо cursor, hover і т.д.
+  isInteractive?: boolean;
 };
 
-export default function CategoryItemCard({
+export function CategoryItemCard({
   category,
   isSelected = false,
   onClick,

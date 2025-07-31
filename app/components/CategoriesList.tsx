@@ -1,14 +1,13 @@
 'use client';
 
 import { useRouter } from 'next/navigation';
-import CategoryCard from './CategoryCard';
 import { CategoryItem } from '../types/category';
 import { deleteCategory, getAllCategories } from '@/lib/api';
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
 import AddCategoryCard from './AddCategoryCard';
+import { CategoryCard } from './CategoryCard';
 
-export default function CategoriesList() {
+export const CategoriesList = () => {
   const [categories, setCategories] = useState<CategoryItem[]>([]);
   const router = useRouter();
 

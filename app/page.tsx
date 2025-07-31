@@ -1,124 +1,33 @@
 'use client';
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
 import Image from 'next/image';
-import { useForm } from 'react-hook-form';
-import { Button } from '@/components/ui/button';
-import {
-  Dialog,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import {
-  Form,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormControl,
-  FormMessage,
-} from '@/components/ui/form';
-import { Input } from '@/components/ui/input';
-import { zodResolver } from '@hookform/resolvers/zod';
-import z from 'zod';
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { getMe, logout } from '@/lib/api';
 import { cn } from '@/lib/utils';
-import { getMe } from '@/lib/api';
+import { Button } from '@/components/ui/button';
+import { AuthDialog } from './components/AuthDialog';
 
-const loginSchema = z.object({
-  email: z.email('Invalid email address'),
-  password: z.string().min(6, 'Password must be at least 6 characters'),
-});
 
-const registerSchema = loginSchema.extend({
-  name: z.string().min(1, 'Name is required'),
-});
-
-type RegisterInputs = z.infer<typeof registerSchema>;
-
-type AuthFormInputs = Partial<RegisterInputs> & {
-  email: string;
-  password: string;
-  name?: string;
-};
-
-export default function Home() {
+export default function HomePage() {
   const router = useRouter();
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [authError, setAuthError] = useState<string | null>(null);
-  const [mode, setMode] = useState<'login' | 'register'>('login');
 
-  const schema = mode === 'login' ? loginSchema : registerSchema;
+  useEffect(() => {
+    getMe()
+      .then(() => setIsLoggedIn(true))
+      .catch(() => setIsLoggedIn(false));
+  }, []);
 
-  const form = useForm<AuthFormInputs>({
-    resolver: zodResolver(schema),
-    defaultValues: { email: '', password: '', name: '' },
-  });
-
-useEffect(() => {
-  getMe()
-    .then(() => setIsLoggedIn(true))
-    .catch(() => setIsLoggedIn(false));
-}, []);
-
-
-const onSubmit = async (data: AuthFormInputs) => {
-  setAuthError(null);
-  const isLogin = mode === 'login';
-
-  try {
-    if (!isLogin) {
-      const registerRes = await fetch('/api/auth/register', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          name: data.name,
-          email: data.email,
-          password: data.password,
-        }),
-      });
-
-      if (!registerRes.ok) {
-        const json = await registerRes.json().catch(() => ({}));
-        setAuthError(json.error || 'Registration failed');
-        return;
-      }
-    }
-
-    const loginRes = await fetch('/api/auth/login', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        email: data.email,
-        password: data.password,
-      }),
-      credentials: 'include', 
-    });
-
-    if (!loginRes.ok) {
-      const json = await loginRes.json().catch(() => ({}));
-      setAuthError(json.error || 'Login failed after registration');
-      return;
-    }
-
-    setIsLoggedIn(true);
-    form.reset();
-    router.push('/categories');
-  } catch {
-    setAuthError('Network error');
-  }
-};
-
-
+ 
 const handleLogout = async () => {
-  await fetch('/api/auth/logout', {
-    method: 'POST',
-    credentials: 'include',
-  });
-  setIsLoggedIn(false);
-  router.push('/');
+  try {
+    await logout();
+    setIsLoggedIn(false);
+    router.push('/');
+  } catch (error) {
+    alert((error as Error).message);
+  }
 };
 
   return (
@@ -157,135 +66,13 @@ const handleLogout = async () => {
 
       {isLoggedIn ? (
         <Button
-          className='max-w-140 w-full h-10 self-center bg-indigo-300 hover:bg-indigo-400 text-white transition'
+          className='max-w-140 w-full h-12 self-center bg-indigo-300 hover:bg-indigo-400 text-white transition'
           onClick={() => router.push('/categories')}
         >
           Go to Notes
         </Button>
       ) : (
-        <Dialog>
-          <DialogTrigger asChild>
-            <Button className='max-w-140 w-full h-10 self-center bg-indigo-300 hover:bg-indigo-400 text-white transition'>
-              {mode === 'login' ? 'Log In' : 'Register'}
-            </Button>
-          </DialogTrigger>
-          <DialogContent className='w-full max-w-md bg-white p-6 rounded-xl shadow-lg'>
-            <DialogHeader>
-              <DialogTitle>
-                {mode === 'login'
-                  ? 'Login to Your Account'
-                  : 'Create a New Account'}
-              </DialogTitle>
-            </DialogHeader>
-
-            <Form {...form}>
-              <form
-                onSubmit={form.handleSubmit(onSubmit)}
-                className='space-y-4 mt-4'
-              >
-                {mode === 'register' && (
-                  <FormField
-                    control={form.control}
-                    name='name'
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Name</FormLabel>
-                        <FormControl>
-                          <Input placeholder='Your name' {...field} />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                )}
-
-                <FormField
-                  control={form.control}
-                  name='email'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Email</FormLabel>
-                      <FormControl>
-                        <Input placeholder='you@example.com' {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                <FormField
-                  control={form.control}
-                  name='password'
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormLabel>Password</FormLabel>
-                      <FormControl>
-                        <Input
-                          type='password'
-                          placeholder='********'
-                          {...field}
-                        />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
-                />
-
-                {authError && (
-                  <p className='text-red-600 font-semibold'>{authError}</p>
-                )}
-
-                <Button
-                  type='submit'
-                  disabled={form.formState.isSubmitting}
-                  className='w-full'
-                >
-                  {form.formState.isSubmitting
-                    ? mode === 'login'
-                      ? 'Logging in...'
-                      : 'Registering...'
-                    : mode === 'login'
-                    ? 'Log In'
-                    : 'Register'}
-                </Button>
-              </form>
-            </Form>
-
-            <div className='text-sm text-center mt-4'>
-              {mode === 'login' ? (
-                <>
-                  Don&apos;t have an account?{' '}
-                  <button
-                    type='button'
-                    className='text-blue-600 hover:underline'
-                    onClick={() => {
-                      setAuthError(null);
-                      setMode('register');
-                      form.reset();
-                    }}
-                  >
-                    Register
-                  </button>
-                </>
-              ) : (
-                <>
-                  Already have an account?{' '}
-                  <button
-                    type='button'
-                    className='text-blue-600 hover:underline'
-                    onClick={() => {
-                      setAuthError(null);
-                      setMode('login');
-                      form.reset();
-                    }}
-                  >
-                    Log In
-                  </button>
-                </>
-              )}
-            </div>
-          </DialogContent>
-        </Dialog>
+        <AuthDialog onAuthSuccess={() => setIsLoggedIn(true)} />
       )}
     </div>
   );

@@ -20,7 +20,7 @@ type Props = {
   isNotesEmpty: boolean;
 };
 
-export default function AddNoteDialog({ categoryId, onNoteCreated, isNotesEmpty }: Props) {
+export const AddNoteDialog = ({ categoryId, onNoteCreated, isNotesEmpty }: Props) => {
   const [isOpen, setIsOpen] = useState(false);
 
   const handleNoteCreated = (note: Note) => {
@@ -33,7 +33,7 @@ export default function AddNoteDialog({ categoryId, onNoteCreated, isNotesEmpty 
       <DialogTrigger asChild>
         <Button
           className={cn(
-            'h-10 self-start px-6 mb-8 bg-indigo-300 hover:bg-indigo-400 text-white transition',
+            'h-12 self-start px-6 mb-8 bg-indigo-300 hover:bg-indigo-400 text-white transition',
             { 'self-center w-60': isNotesEmpty }
           )}
         >

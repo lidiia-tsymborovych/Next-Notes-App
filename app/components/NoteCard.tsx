@@ -13,7 +13,7 @@ type Props = {
   onDelete?: (id: number) => void;
 };
 
-export default function NoteCard({ note, onEdit, onDelete }: Props) {
+export const NoteCard = ({ note, onEdit, onDelete }: Props) => {
   const [expanded, setExpanded] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [editedNote, setEditedNote] = useState({
@@ -24,6 +24,10 @@ export default function NoteCard({ note, onEdit, onDelete }: Props) {
   const toggleExpand = () => {
     if (!isEditing) setExpanded(prev => !prev);
   };
+
+  const isSaveDisabled =
+    editedNote.title.trim() === '' || editedNote.content.trim() === '';
+
 
   const handleSave = () => {
     onEdit?.({
@@ -80,6 +84,7 @@ export default function NoteCard({ note, onEdit, onDelete }: Props) {
             <Button
               size='sm'
               onClick={handleSave}
+              disabled={isSaveDisabled}
               className='bg-green-100 hover:bg-green-200 text-green-800'
             >
               <Save size={16} />

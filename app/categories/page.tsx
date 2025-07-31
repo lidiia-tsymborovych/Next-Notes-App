@@ -1,12 +1,10 @@
 'use client';
 
 import { useEffect, useState } from 'react';
-import CategoriesList from '../components/CategoriesList';
-import NavigationActions from '../components/NavigationActions';
-import { useRouter } from 'next/navigation';
 import { CategoryItem } from '../types/category';
-import { Button } from '@/components/ui/button';
 import { getAllCategories } from '@/lib/api';
+import { NavigationActions } from '../components/NavigationActions';
+import { CategoriesList } from '../components/CategoriesList';
 
 export default function CategoriesPage() {
   const [categories, setCategories] = useState<CategoryItem[] | null>(null);
@@ -28,14 +26,14 @@ useEffect(() => {
         Your Categories
       </h1>
 
-      <div className='flex-grow flex flex-col gap-16 max-w-6xl mx-auto w-full h-full '>
+      <section className='flex-grow flex flex-col gap-16 max-w-6xl mx-auto w-full h-full '>
         <CategoriesList />
         {!categories?.length && (
           <div className='text-[var(--foreground)]/60 text-[16px] sm:text-[18px] text-center'>
             You have no categories yet.
           </div>
         )}
-      </div>
+      </section>
     </div>
   );
 }

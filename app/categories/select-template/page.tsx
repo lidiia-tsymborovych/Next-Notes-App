@@ -1,12 +1,13 @@
 'use client';
 import { useEffect, useState } from 'react';
-import { Button } from '@/components/ui/button';
 import { useRouter } from 'next/navigation';
-import { getAvailableTemplates } from '@/lib/getAvailableTemplates';
 import { CategoryItem, CategoryWithoutId } from '@/app/types/category';
-import NavigationActions from '@/app/components/NavigationActions';
-import CategoryItemCard from '@/app/components/CategoryPreview';
-import { CategoryForm } from '@/app/components/CaregoryForm';
+import { addCategories, getAllCategories } from '@/lib/api';
+import { getAvailableTemplates } from '@/lib/getAvailableTemplates';
+import { Button } from '@/components/ui/button';
+import { CategoryForm } from '@/app/components/CategoryForm';
+import { NavigationActions } from '@/app/components/NavigationActions';
+import { CategoryItemCard } from '@/app/components/ItemCard';
 
 export default function SelectTemplatePage() {
   const [selectedCategories, setSelectedCategories] = useState<
@@ -16,12 +17,9 @@ export default function SelectTemplatePage() {
   const [showCustomForm, setShowCustomForm] = useState(false);
 
   useEffect(() => {
-    const fetchCategories = async () => {
-      const res = await fetch('/api/categories');
-      const data = await res.json();
-      setUserCategories(data);
-    };
-    fetchCategories();
+    getAllCategories()
+      .then(setUserCategories)
+      .catch(error => alert((error as Error).message));
   }, []);
 
   const suggested = getAvailableTemplates(userCategories);
@@ -30,7 +28,6 @@ export default function SelectTemplatePage() {
 
   const isAnySelected = selectedCategories.length > 0;
 
-  // Тогл категорії у швидкому режимі
   const toggleCategory = (cat: CategoryWithoutId) => {
     const exists = selectedCategories.find(c => c.title === cat.title);
     if (exists) {
@@ -43,30 +40,22 @@ export default function SelectTemplatePage() {
   const handleAddCategories = async () => {
     if (selectedCategories.length === 0) return;
 
-    const payload =
-      selectedCategories.length === 1
-        ? selectedCategories[0]
-        : { categories: selectedCategories };
-
     try {
-      const res = await fetch('/api/categories', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify(payload),
-      });
+      const categoriesToAdd =
+        selectedCategories.length === 1
+          ? selectedCategories[0]
+          : selectedCategories;
 
-      if (!res.ok) throw new Error('Failed to add categories');
+      await addCategories(categoriesToAdd);
 
-      // редірект на сторінку категорій після успіху
       router.push('/categories');
-    } catch (e) {
-      alert((e as Error).message);
+    } catch (error) {
+      alert((error as Error).message);
     }
   };
 
   return (
-    <main className='min-h-screen px-4 sm:px-8 flex flex-col gap-8 md:gap-10 lg:gap-12'>
+    <div className='min-h-screen px-4 sm:px-8 flex flex-col gap-8 md:gap-10 lg:gap-12'>
       <NavigationActions />
       <h1 className='text-[32px] sm:text-[32px] md:text-[48px] lg:text-[56px] text-center text-[var(--foreground)] font-bold mt-16'>
         Category Templates
@@ -111,6 +100,6 @@ export default function SelectTemplatePage() {
           </div>
         )}
       </div>
-    </main>
+    </div>
   );
 }

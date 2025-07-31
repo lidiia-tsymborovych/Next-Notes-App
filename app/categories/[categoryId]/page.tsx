@@ -2,13 +2,12 @@
 
 import { useParams } from 'next/navigation';
 import { useEffect, useState } from 'react';
-
-import NavigationActions from '@/app/components/NavigationActions';
-import NoteCard from '@/app/components/NoteCard';
+import { Note } from '@/app/types/note';
 import { deleteNote, getAllCategories, updateNote } from '@/lib/api';
 import { CategoryItem } from '@/app/types/category';
-import { Note } from '@/app/types/note';
-import AddNoteDialog from '@/app/components/AddNoteDialog';
+import { NavigationActions } from '@/app/components/NavigationActions';
+import { AddNoteDialog } from '@/app/components/AddNoteDialog';
+import { NoteCard } from '@/app/components/NoteCard';
 
 export default function CategoryNotesPage() {
   const { categoryId } = useParams();
@@ -17,48 +16,49 @@ export default function CategoryNotesPage() {
   const [notes, setNotes] = useState<Note[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    async function fetchCategory() {
-      setLoading(true);
-      try {
-        const categories = await getAllCategories();
-        const foundCategory =
-          categories.find(cat => cat.id === Number(categoryId)) || null;
-        setCategory(foundCategory);
-        setNotes(foundCategory?.notes || []);
-      } catch (error) {
-        console.error('Error fetching categories:', error);
-      } finally {
-        setLoading(false);
-      }
-    }
-    if (categoryId) fetchCategory();
-  }, [categoryId]);
+useEffect(() => {
+  if (!categoryId) return;
+
+  setLoading(true);
+  getAllCategories()
+    .then(categories => {
+      const foundCategory =
+        categories.find(cat => cat.id === Number(categoryId)) || null;
+      setCategory(foundCategory);
+      setNotes(foundCategory?.notes || []);
+    })
+    .catch(error => {
+      alert((error as Error).message);
+    })
+    .finally(() => {
+      setLoading(false);
+    });
+}, [categoryId]);
+
 
   const handleNoteCreated = (note: Note) => {
     setNotes(prev => [...prev, note]);
   };
-const handleNoteEdit = async (updatedNote: Note) => {
-  try {
-    const savedNote = await updateNote(updatedNote.id, {
-      title: updatedNote.title,
-      content: updatedNote.content,
-    });
 
-    setNotes(prev => prev.map(n => (n.id === savedNote.id ? savedNote : n)));
-  } catch (error) {
-    console.error('Failed to update note:', error);
-    alert('Something went wrong 😓');
-  }
-};
+  const handleNoteEdit = async (updatedNote: Note) => {
+    try {
+      const savedNote = await updateNote(updatedNote.id, {
+        title: updatedNote.title,
+        content: updatedNote.content,
+      });
 
+      setNotes(prev => prev.map(n => (n.id === savedNote.id ? savedNote : n)));
+    } catch (error) {
+      alert((error as Error).message);
+    }
+  };
 
   const handleNoteDelete = async (id: number) => {
     try {
       await deleteNote(id);
       setNotes(prev => prev.filter(n => n.id !== id));
-    } catch (err) {
-      console.error('Failed to delete', err);
+    } catch (error) {
+      alert((error as Error).message);
     }
   };
 
@@ -75,15 +75,15 @@ const handleNoteEdit = async (updatedNote: Note) => {
   const isNotesEmpty = notes.length === 0; 
 
   return (
-    <main className='flex flex-col max-w-6xl mx-auto gap-6 sm:gap-8 px-4 sm:px-8'>
-      <div className='flex flex-col'>
+    <div className='flex flex-col max-w-6xl mx-auto gap-6 sm:gap-8 px-4 sm:px-8'>
+      <header className='flex flex-col'>
         <NavigationActions />
         <h1 className='text-[32px] md:text-[48px] lg:text-[56px] text-center text-[var(--foreground)] font-bold mt-16'>
           {title} Notes
         </h1>
-      </div>
+      </header>
 
-      <div className='w-full flex flex-col'>
+      <section className='w-full flex flex-col'>
         <AddNoteDialog
           categoryId={category.id}
           onNoteCreated={handleNoteCreated}
@@ -106,7 +106,7 @@ const handleNoteEdit = async (updatedNote: Note) => {
             ))}
           </div>
         )}
-      </div>
-    </main>
+      </section>
+    </div>
   );
 }

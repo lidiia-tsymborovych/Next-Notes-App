@@ -22,9 +22,9 @@ import {
 import { Button } from '@/components/ui/button';
 import { categoryIconMap, CategoryWithoutId } from '../types/category';
 import { X } from 'lucide-react';
-import CategoryPreview from './CategoryPreview';
 import { useRouter } from 'next/navigation';
 import { createCategory } from '@/lib/api';
+import { CategoryItemCard } from './ItemCard';
 
 const iconNames = Object.keys(
   categoryIconMap
@@ -73,7 +73,6 @@ export function CategoryForm({ onClose }: Props) {
       alert((e as Error).message);
     }
   };
-
 
   const watchValues = form.watch();
 
@@ -193,7 +192,7 @@ export function CategoryForm({ onClose }: Props) {
             CANCEL
             <X size={24} />
           </Button>
-          <CategoryPreview category={previewCategory} />
+          <CategoryItemCard category={previewCategory} />
         </div>
       </div>
     </div>

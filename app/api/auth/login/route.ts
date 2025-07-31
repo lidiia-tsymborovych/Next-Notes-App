@@ -47,7 +47,7 @@ export async function POST(req: Request) {
     response.cookies.set('token', token, {
       httpOnly: true,
       secure: process.env.NODE_ENV === 'production', // у продакшені true
-      maxAge: 60 * 60, // 1 година
+      maxAge: 60 * 60 * 12,
       path: '/',
       sameSite: 'strict',
     });

@@ -1,10 +1,9 @@
 'use client';
-
-import { Button } from '@/components/ui/button';
-import { categoryIconMap, CategoryWithoutId } from '../types/category';
-import { Trash2 } from 'lucide-react';
-import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { useState } from 'react';
+import { Trash2 } from 'lucide-react';
+import { categoryIconMap, CategoryWithoutId } from '../types/category';
+import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Button } from '@/components/ui/button';
 
 type Props = {
   category: CategoryWithoutId;
@@ -12,7 +11,7 @@ type Props = {
   onDelete?: () => void;
 };
 
-export default function CategoryCard({ category, onClick, onDelete }: Props) {
+export const CategoryCard = ({ category, onClick, onDelete }: Props) => {
    const [isOpen, setIsOpen] = useState(false);
    const Icon = categoryIconMap[category.iconName];
 
@@ -68,7 +67,7 @@ export default function CategoryCard({ category, onClick, onDelete }: Props) {
           <DialogFooter>
             <div className='flex gap-4'>
               <Button
-                className='bg-indigo-100 h-12 grow'
+                className='text-[var(--foreground)] bg-indigo-100 h-12 grow hover:bg-indigo-200'
                 onClick={e => {
                   e.stopPropagation();
                   setIsOpen(false);
@@ -77,7 +76,7 @@ export default function CategoryCard({ category, onClick, onDelete }: Props) {
                 Cancel
               </Button>
               <Button
-                className='bg-fuchsia-100 h-12 grow'
+                className='text-[var(--foreground)] bg-fuchsia-100 h-12 grow hover:bg-fuchsia-200'
                 onClick={e => {
                   e.stopPropagation();
                   handleDeleteConfirm();
