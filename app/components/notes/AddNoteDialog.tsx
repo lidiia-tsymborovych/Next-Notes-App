@@ -9,10 +9,10 @@ import {
   DialogTrigger,
 } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
-import AddNoteForm from './AddNoteForm';
-import { Note } from '../types/note';
 import { cn } from '@/lib/utils';
 import { DialogDescription } from '@radix-ui/react-dialog';
+import { Note } from '@prisma/client';
+import AddNoteForm from './AddNoteForm';
 
 type Props = {
   categoryId: number;
@@ -33,7 +33,7 @@ export const AddNoteDialog = ({ categoryId, onNoteCreated, isNotesEmpty }: Props
       <DialogTrigger asChild>
         <Button
           className={cn(
-            'h-12 self-start px-6 mb-8 bg-indigo-300 hover:bg-indigo-400 text-white transition',
+            'h-12 self-start px-6 mt-4 bg-indigo-300 hover:bg-indigo-400 text-white transition',
             { 'self-center w-60': isNotesEmpty }
           )}
         >

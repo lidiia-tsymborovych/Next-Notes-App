@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 
-export default function AddCategoryCard() {
+export const AddCategoryCard = () => {
   const router = useRouter();
 
   return (

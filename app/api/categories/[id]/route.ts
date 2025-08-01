@@ -1,6 +1,40 @@
+// app/api/categories/[id]/route.ts
+
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
-import { getCurrentUser } from '@/lib/auth';
+import { getCurrentUser } from '@/lib/getCurrentUser';
+
+export async function GET(
+  req: Request,
+  { params }: { params: { id: string } }
+) {
+  const id = Number(params.id);
+  if (isNaN(id)) {
+    return NextResponse.json({ message: 'Invalid ID' }, { status: 400 });
+  }
+
+  try {
+    const category = await prisma.category.findUnique({
+      where: { id },
+      include: { notes: true },
+    });
+
+    if (!category) {
+      return NextResponse.json(
+        { message: 'Category not found' },
+        { status: 404 }
+      );
+    }
+
+    return NextResponse.json(category);
+  } catch (error) {
+    console.error(error);
+    return NextResponse.json(
+      { message: 'Failed to fetch category' },
+      { status: 500 }
+    );
+  }
+}
 
 export async function DELETE(
   req: Request,

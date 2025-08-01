@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import BubblesBackground from "./components/BubblesBackground";
+import BubblesBackground from "./components/home/BubblesBackground";
+import { UserProvider } from "./components/home/UserProvider";
 
 export const metadata: Metadata = {
   title: 'Next Notes App — your simple note app',
@@ -27,9 +28,11 @@ export const metadata: Metadata = {
     icon: '/favicon.ico', 
   },
 
-  themeColor: '#4f46e5',
-
   // metadataBase: new URL('https://your-domain.com'), 
+};
+
+export const viewport = {
+  themeColor: '#4f46e5',
 };
 
 
@@ -42,7 +45,9 @@ export default function RootLayout({
     <html lang='en'>
       <body>
         <main className='relative'>
-          <div className='mx-auto w-full'>{children}</div>
+          <UserProvider>
+            <div className='mx-auto w-full'>{children}</div>
+          </UserProvider>
         </main>
         <BubblesBackground />
       </body>

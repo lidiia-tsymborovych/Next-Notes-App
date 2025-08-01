@@ -1,11 +1,11 @@
 'use client';
 
 import { useState } from 'react';
-import { Note } from '../types/note';
 import { ChevronDown, ChevronUp, Pencil, Trash2, Save } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
+import { Note } from '@prisma/client';
 
 type Props = {
   note: Note;
@@ -39,7 +39,7 @@ export const NoteCard = ({ note, onEdit, onDelete }: Props) => {
   };
 
   return (
-    <article className='rounded-2xl p-5 w-full flex flex-col gap-4 bg-gray-50 border border-gray-200 shadow-md transition-shadow hover:shadow-lg'>
+    <article className='rounded-2xl p-5 w-full flex flex-col gap-4 bg-gray-50 border border-gray-200 shadow-md transition-shadow hover:shadow-lg min-h-26'>
       <div className='flex justify-between items-start gap-4 w-full'>
         <div onClick={toggleExpand} className='cursor-pointer flex-1'>
           {isEditing ? (

@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { createNote } from '@/lib/api';
-import { Note } from '../types/note';
+import { Note } from '@prisma/client';
 
 type Props = {
   categoryId: number;

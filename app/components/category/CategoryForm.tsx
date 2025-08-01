@@ -20,11 +20,11 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
-import { categoryIconMap, CategoryWithoutId } from '../types/category';
 import { X } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { createCategory } from '@/lib/api';
-import { CategoryItemCard } from './ItemCard';
+import { categoryIconMap, CategoryWithoutId } from '@/app/types/category';
+import { CategoryItemCard } from '../notes/ItemCard';
 
 const iconNames = Object.keys(
   categoryIconMap
@@ -51,7 +51,7 @@ export function CategoryForm({ onClose }: Props) {
     resolver: zodResolver(formSchema),
     defaultValues: {
       title: '',
-      icon: 'work', // або перший елемент з iconNames
+      icon: 'work',
       iconColor: '#000000',
       backgroundColor: '#ffffff',
     },

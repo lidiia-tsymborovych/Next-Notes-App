@@ -24,6 +24,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { loginUser, registerUser } from '@/lib/api';
 import { Eye, EyeOff, X } from 'lucide-react';
+import { DialogDescription } from '@radix-ui/react-dialog';
+import { useUserStore } from '@/lib/store/user-store';
 
 const loginSchema = z.object({
   email: z.email('Invalid email address'),
@@ -42,15 +44,12 @@ type AuthFormInputs = Partial<RegisterInputs> & {
   name?: string;
 };
 
-type Props = {
-  onAuthSuccess: () => void;
-};
-
-export const AuthDialog = ({ onAuthSuccess }: Props) => {
+export const AuthDialog = () => {
   const router = useRouter();
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [authError, setAuthError] = useState<string | null>(null);
   const [showPassword, setShowPassword] = useState(false);
+  const fetchUser = useUserStore(state => state.fetchUser);
 
   const schema = mode === 'login' ? loginSchema : registerSchema;
   const form = useForm<AuthFormInputs>({
@@ -78,8 +77,8 @@ export const AuthDialog = ({ onAuthSuccess }: Props) => {
       }
 
       await loginUser({ email: data.email, password: data.password });
+      await fetchUser();
 
-      onAuthSuccess();
       form.reset();
       router.push('/categories');
     } catch (error: unknown) {
@@ -100,6 +99,9 @@ export const AuthDialog = ({ onAuthSuccess }: Props) => {
       </DialogTrigger>
       <DialogContent className='w-full max-w-md bg-white p-6 rounded-xl shadow-lg border-0'>
         <DialogHeader>
+          <DialogDescription>
+            Enter your email and password to access your account.
+          </DialogDescription>
           <DialogTitle>
             {mode === 'login'
               ? 'Login to Your Account'
@@ -259,4 +261,4 @@ export const AuthDialog = ({ onAuthSuccess }: Props) => {
       </DialogContent>
     </Dialog>
   );
-}
+};

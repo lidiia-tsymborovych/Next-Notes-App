@@ -1,9 +1,9 @@
 'use client';
 import { useState } from 'react';
 import { Trash2 } from 'lucide-react';
-import { categoryIconMap, CategoryWithoutId } from '../types/category';
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Button } from '@/components/ui/button';
+import { categoryIconMap, CategoryWithoutId } from '@/app/types/category';
 
 type Props = {
   category: CategoryWithoutId;

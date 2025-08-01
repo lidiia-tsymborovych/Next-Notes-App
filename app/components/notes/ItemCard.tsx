@@ -16,7 +16,7 @@ export function CategoryItemCard({
   const Icon = categoryIconMap[category.iconName];
 
   const baseClasses =
-    'flex flex-col items-center justify-center min-h-28 gap-2 p-4 rounded-lg border-3 transition-colors';
+    'flex flex-col items-center justify-center min-h-28 gap-2 p-4 rounded-lg border-3 transition-colors text-[var(--foreground)]';
 
   const borderClasses = isInteractive
     ? isSelected

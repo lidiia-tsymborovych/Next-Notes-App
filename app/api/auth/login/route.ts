@@ -1,3 +1,5 @@
+// app/api/auth/login/route.ts
+
 import { NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { compare } from 'bcrypt';
@@ -40,13 +42,19 @@ export async function POST(req: Request) {
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: _unused, ...userWithoutPassword } = user;
 
-    // Створюємо NextResponse з cookie
-    const response = NextResponse.json({ user: userWithoutPassword });
+    const response = new NextResponse(
+      JSON.stringify({ user: userWithoutPassword }),
+      {
+        status: 200,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+    );
 
-    // Записуємо cookie з токеном
     response.cookies.set('token', token, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // у продакшені true
+      secure: process.env.NODE_ENV === 'production',
       maxAge: 60 * 60 * 12,
       path: '/',
       sameSite: 'strict',

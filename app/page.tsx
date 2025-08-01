@@ -1,51 +1,27 @@
 'use client';
 
 import Image from 'next/image';
-import { useEffect, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import { getMe, logout } from '@/lib/api';
 import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
-import { AuthDialog } from './components/AuthDialog';
-
+import { AuthDialog } from './components/home/AuthDialog';
+import { Header } from './components/home/Header';
+import { useUserStore } from '@/lib/store/user-store';
 
 export default function HomePage() {
   const router = useRouter();
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-
-  useEffect(() => {
-    getMe()
-      .then(() => setIsLoggedIn(true))
-      .catch(() => setIsLoggedIn(false));
-  }, []);
-
- 
-const handleLogout = async () => {
-  try {
-    await logout();
-    setIsLoggedIn(false);
-    router.push('/');
-  } catch (error) {
-    alert((error as Error).message);
-  }
-};
+  const user = useUserStore(state => state.user);
+  const loading = useUserStore(state => state.loading);
 
   return (
-    <div className='flex flex-col justify-center items-center min-h-screen text-center'>
-      <div className='flex flex-col'>
-        {isLoggedIn && (
-          <Button
-            onClick={handleLogout}
-            className='absolute top-0 right-0 text-sm text-violet-400 self-end cursor-pointer hover:text-violet-600 shadow-none'
-          >
-            Log out
-          </Button>
-        )}
+    <div className='flex flex-col justify-center items-center min-h-screen text-center px-4'>
+      <Header isHomePage={true} />
 
+      <div className='flex flex-col'>
         <h1
           className={cn(
             'text-[48px] sm:text-[48px] lg:text-[56px] font-bold mb-6 sm:mb-8 tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-[#700aff] via-pink-500 to-purple-700 animate-text',
-            { 'mt-9': !isLoggedIn }
+            { 'mt-9': !user }
           )}
         >
           Welcome to Notes App
@@ -61,10 +37,11 @@ const handleLogout = async () => {
           width={400}
           height={400}
           className='self-center mb-8'
+          priority
         />
       </div>
 
-      {isLoggedIn ? (
+      {!loading && user ? (
         <Button
           className='max-w-140 w-full h-12 self-center bg-indigo-300 hover:bg-indigo-400 text-white transition'
           onClick={() => router.push('/categories')}
@@ -72,7 +49,7 @@ const handleLogout = async () => {
           Go to Notes
         </Button>
       ) : (
-        <AuthDialog onAuthSuccess={() => setIsLoggedIn(true)} />
+        <AuthDialog />
       )}
     </div>
   );

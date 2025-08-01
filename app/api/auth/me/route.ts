@@ -1,4 +1,4 @@
-// /api/auth/me/route.ts
+// app/api/auth/me/route.ts
 import { NextResponse } from 'next/server';
 import jwt from 'jsonwebtoken';
 import { prisma } from '@/lib/prisma';
@@ -14,6 +14,7 @@ export async function GET(req: Request) {
     if (!tokenCookie) {
       return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
     }
+    console.log('cookie header:', req.headers.get('cookie'));
 
     const token = tokenCookie.split('=')[1];
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
