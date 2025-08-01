@@ -1,54 +1,52 @@
-// app/api/categories/[id]/route.ts
-
-import { NextResponse } from 'next/server';
+import { NextRequest, NextResponse } from 'next/server';
 import { prisma } from '@/lib/prisma';
 import { getCurrentUser } from '@/lib/getCurrentUser';
 
-export async function GET(
-  req: Request,
-  { params }: { params: { id: string } }
-) {
-  const id = Number(params.id);
-  if (isNaN(id)) {
-    return NextResponse.json({ message: 'Invalid ID' }, { status: 400 });
-  }
+export async function GET(req: Request, context: unknown) {
+  const ctx = context as { params?: Record<string, string | string[]> };
 
-  try {
-    const category = await prisma.category.findUnique({
-      where: { id },
-      include: { notes: true },
-    });
-
-    if (!category) {
-      return NextResponse.json(
-        { message: 'Category not found' },
-        { status: 404 }
-      );
-    }
-
-    return NextResponse.json(category);
-  } catch (error) {
-    console.error(error);
+  if (!ctx.params?.id || Array.isArray(ctx.params.id)) {
     return NextResponse.json(
-      { message: 'Failed to fetch category' },
-      { status: 500 }
+      { error: 'Invalid or missing id' },
+      { status: 400 }
     );
   }
+
+  const id = parseInt(ctx.params.id, 10);
+  if (isNaN(id)) {
+    return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
+  }
+
+  const category = await prisma.category.findUnique({
+    where: { id },
+  });
+
+  if (!category) {
+    return NextResponse.json({ error: 'Category not found' }, { status: 404 });
+  }
+
+  return NextResponse.json(category);
 }
 
-export async function DELETE(
-  req: Request,
-  context: { params: Promise<{ id: string }> }
-) {
+export async function DELETE(req: NextRequest, context: unknown) {
   const user = await getCurrentUser();
+
   if (!user) {
     return NextResponse.json({ message: 'Unauthorized' }, { status: 401 });
   }
 
-  const params = await context.params; // чекаємо params
-  const id = Number(params.id);
+  const ctx = context as { params?: Record<string, string | string[]> };
+
+  if (!ctx.params?.id || Array.isArray(ctx.params.id)) {
+    return NextResponse.json(
+      { error: 'Invalid or missing id' },
+      { status: 400 }
+    );
+  }
+
+  const id = parseInt(ctx.params.id, 10);
   if (isNaN(id)) {
-    return NextResponse.json({ message: 'Invalid ID' }, { status: 400 });
+    return NextResponse.json({ error: 'Invalid id' }, { status: 400 });
   }
 
   try {
