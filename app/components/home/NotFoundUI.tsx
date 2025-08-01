@@ -7,8 +7,23 @@ export function NotFoundUI() {
 
   return (
     <div
-      className='h-screen bg-gradient-to-br from-indigo-900 via-violet-900 to-fuchsia-900
-      flex flex-col justify-center items-center gap-8 p-6 text-center font-sans select-none text-white'
+      className='
+        h-screen 
+        bg-gradient-to-br 
+        from-indigo-900 
+        via-violet-900 
+        to-fuchsia-900
+        flex 
+        flex-col 
+        justify-center 
+        items-center 
+        gap-8 
+        p-6 
+        text-center 
+        font-sans 
+        select-none 
+        text-white
+      '
       style={{
         backgroundSize: '400% 400%',
         animation: 'gradientBackground 15s ease infinite',
@@ -26,12 +41,26 @@ export function NotFoundUI() {
       </p>
       <button
         onClick={() => router.push('/')}
-        className='mt-6 bg-gradient-to-r from-fuchsia-500 via-pink-500 to-indigo-500
-          px-8 py-4 rounded-xl font-bold shadow-lg
-          hover:scale-105 hover:shadow-2xl transition-transform duration-300'
+        className='
+          mt-6 
+          bg-gradient-to-r 
+          from-fuchsia-500 
+          via-pink-500 
+          to-indigo-500
+          px-8 
+          py-4 
+          rounded-xl 
+          font-bold 
+          shadow-lg
+          hover:scale-105 
+          hover:shadow-2xl 
+          transition-transform 
+          duration-300
+        '
       >
         Take Me Home
       </button>
+
       <style jsx>{`
         @keyframes gradientBackground {
           0% {

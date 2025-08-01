@@ -65,7 +65,7 @@ export default function SelectTemplatePage() {
   };
 
   return (
-    <div className='min-h-screen px-4 sm:px-8 pt-20 flex flex-col gap-8 md:gap-10 lg:gap-12'>
+    <div className='min-h-screen px-4 sm:px-8 pt-20 flex flex-col gap-8 md:gap-10 lg:gap-12 mb-20'>
       <Header />
       <h1 className='text-[32px] sm:text-[32px] md:text-[48px] lg:text-[56px] text-center text-[var(--foreground)] font-bold'>
         Category Templates
@@ -117,7 +117,7 @@ export default function SelectTemplatePage() {
               <div>
                 <Button
                   onClick={handleAddCategories}
-                  className='w-full h-12 self-center bg-indigo-300 hover:bg-indigo-400 text-white transition'
+                  className='w-full h-12 self-center bg-indigo-300 hover:bg-indigo-400 text-white transition mb-16'
                 >
                   Add categories
                 </Button>

@@ -36,7 +36,7 @@ export async function POST(req: Request) {
     }
 
     const token = jwt.sign({ userId: user.id, email: user.email }, JWT_SECRET, {
-      expiresIn: '1h',
+      expiresIn: '12h',
     });
 
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
