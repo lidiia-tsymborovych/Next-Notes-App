@@ -20,8 +20,7 @@ export default function HomePage() {
       <div className='flex flex-col'>
         <h1
           className={cn(
-            'text-[48px] sm:text-[48px] lg:text-[56px] font-bold mb-6 sm:mb-8 tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-[#700aff] via-pink-500 to-purple-700 animate-text',
-            { 'mt-9': !user }
+            'text-[48px] sm:text-[48px] lg:text-[56px] font-bold mb-6 sm:mb-8 mt-14 tracking-tight leading-tight text-transparent bg-clip-text bg-gradient-to-r from-[#700aff] via-pink-500 to-purple-700 animate-text',
           )}
         >
           Welcome to Notes App
